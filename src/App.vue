@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <Header />
-    根目录
-    <Footer />
+    <router-view></router-view>
+    <Footer v-show="$route.meta.show" />
   </div>
 </template>
 
