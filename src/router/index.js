@@ -6,6 +6,46 @@ import Home from "../pages/Home.vue";
 import Search from "../pages/Search.vue";
 
 Vue.use(VueRouter);
+// 保存原来的push方法
+let originPush = VueRouter.prototype.push;
+
+let originReplace = VueRouter.prototype.replace;
+
+// 重写push
+VueRouter.prototype.push = function (location, resolve, reject) {
+  if (resolve && reject) {
+    // 这里要绑定this的原因是，如果直接调用originPush，
+    // 那么它的this就是undefined,在非严格模式下回被转成window
+    // 而window中是没有originPush这个方法的。
+    // 把originPush的this绑定，那么就是调用VueRouter的原型上的originPush方法
+    originPush.call(this, location, resolve, reject);
+  } else {
+    originPush.call(
+      this,
+      location,
+      () => {},
+      () => {}
+    );
+  }
+};
+
+// 重写replace
+VueRouter.prototype.push = function (location, resolve, reject) {
+  if (resolve && reject) {
+    // 这里要绑定this的原因是，如果直接调用originReplace，
+    // 那么它的this就是undefined,在非严格模式下回被转成window
+    // 而window中是没有originReplace这个方法的。
+    // 把originReplace的this绑定，那么就是调用VueRouter的原型上的originReplace方法
+    originReplace.call(this, location, resolve, reject);
+  } else {
+    originReplace.call(
+      this,
+      location,
+      () => {},
+      () => {}
+    );
+  }
+};
 
 export default new VueRouter({
   routes: [
@@ -15,6 +55,7 @@ export default new VueRouter({
       meta: {
         show: false,
       },
+      name: "login",
     },
     {
       path: "/register",
@@ -24,11 +65,13 @@ export default new VueRouter({
       },
     },
     {
-      path: "/search",
+      path: "/search/:keyword",
       component: Search,
       meta: {
         show: true,
       },
+      name: "search",
+      props: true,
     },
     {
       path: "/home",

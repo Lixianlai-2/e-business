@@ -37,11 +37,12 @@
             type="text"
             id="autocomplete"
             class="input-error input-xxlarge"
+            v-model="keyword"
           />
           <button
+            type="button"
             @click="headerSearch"
             class="sui-btn btn-xlarge btn-danger"
-            type="button"
           >
             搜索
           </button>
@@ -56,9 +57,20 @@ export default {
   name: "Header",
   methods: {
     headerSearch() {
-      if (this.$route.path === "/search") return;
-      this.$router.push("/search");
+      // 对象传参
+      this.$router.push({
+        name: "search",
+        params: { keyword: this.keyword, id: 1 },
+        query: {
+          k: this.keyword.toUpperCase(),
+        },
+      });
     },
+  },
+  data() {
+    return {
+      keyword: "",
+    };
   },
 };
 </script>
