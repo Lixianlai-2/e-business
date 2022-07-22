@@ -13,6 +13,9 @@ import Footer from "@/components/footer";
 export default {
   name: "App",
   components: { Header, Footer },
+  mounted() {
+    console.log(this);
+  },
 };
 </script>
 

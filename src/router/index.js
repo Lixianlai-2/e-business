@@ -1,9 +1,9 @@
 import VueRouter from "vue-router";
 import Vue from "vue";
-import Login from "@/pages/Login.vue";
-import Register from "../pages/Register.vue";
-import Home from "../pages/Home.vue";
-import Search from "../pages/Search.vue";
+import Login from "@/pages/Login/index.vue";
+import Register from "../pages/Register/index.vue";
+import Home from "../pages/Home/index.vue";
+import Search from "../pages/Search/index.vue";
 
 Vue.use(VueRouter);
 // 保存原来的push方法
