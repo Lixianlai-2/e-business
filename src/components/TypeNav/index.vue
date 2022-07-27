@@ -2,61 +2,63 @@
   <div class="type-nav">
     <!-- <h1>{{ categoryList }}</h1> -->
     <div class="container">
-      <div @mouseleave="navUnHover">
+      <div @mouseleave="navUnHover" @mouseenter="enterShow">
         <h2 class="all">全部商品分类</h2>
-        <div class="sort">
-          <div class="all-sort-list2" @click="routerChange">
-            <!-- 三级联动 -->
-            <div
-              class="item"
-              v-for="(c1, index) in categoryList"
-              :key="c1.categoryId"
-              @mouseenter="navHover(index)"
-              :class="{ cur: currentIndex == index }"
-            >
-              <h3>
-                <a
-                  :data-categoryName="c1.categoryName"
-                  :data-categoryId1="c1.categoryId"
-                  >{{ c1.categoryName }}</a
-                >
-              </h3>
-              <!-- 二级与三级分类 -->
+        <transition name="sort">
+          <div class="sort" v-show="show">
+            <div class="all-sort-list2" @click="routerChange">
+              <!-- 三级联动 -->
               <div
-                class="item-list clearfix"
-                :style="{ display: currentIndex == index ? 'block' : 'none' }"
+                class="item"
+                v-for="(c1, index) in categoryList"
+                :key="c1.categoryId"
+                @mouseenter="navHover(index)"
+                :class="{ cur: currentIndex == index }"
               >
+                <h3>
+                  <a
+                    :data-categoryName="c1.categoryName"
+                    :data-categoryId1="c1.categoryId"
+                    >{{ c1.categoryName }}</a
+                  >
+                </h3>
+                <!-- 二级与三级分类 -->
                 <div
-                  class="subitem"
-                  v-for="(c2, index) in c1.categoryChild"
-                  :key="c2.categoryId"
+                  class="item-list clearfix"
+                  :style="{ display: currentIndex == index ? 'block' : 'none' }"
                 >
-                  <dl class="fore">
-                    <dt>
-                      <a
-                        :data-categoryName="c2.categoryName"
-                        :data-categoryId2="c2.categoryId"
-                        >{{ c2.categoryName }}</a
-                      >
-                    </dt>
-                    <dd>
-                      <em
-                        v-for="(c3, index) in c2.categoryChild"
-                        :key="c3.categoryId"
-                      >
+                  <div
+                    class="subitem"
+                    v-for="(c2, index) in c1.categoryChild"
+                    :key="c2.categoryId"
+                  >
+                    <dl class="fore">
+                      <dt>
                         <a
-                          :data-categoryName="c3.categoryName"
-                          :data-categoryId3="c3.categoryId"
-                          >{{ c3.categoryName }}</a
+                          :data-categoryName="c2.categoryName"
+                          :data-categoryId2="c2.categoryId"
+                          >{{ c2.categoryName }}</a
                         >
-                      </em>
-                    </dd>
-                  </dl>
+                      </dt>
+                      <dd>
+                        <em
+                          v-for="(c3, index) in c2.categoryChild"
+                          :key="c3.categoryId"
+                        >
+                          <a
+                            :data-categoryName="c3.categoryName"
+                            :data-categoryId3="c3.categoryId"
+                            >{{ c3.categoryName }}</a
+                          >
+                        </em>
+                      </dd>
+                    </dl>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </transition>
       </div>
 
       <nav class="nav">
@@ -80,21 +82,32 @@ import throttle from "lodash/throttle";
 export default {
   name: "TypeNav",
   mounted() {
-    this.$store.dispatch("home/categoryList");
-    console.log(this.$store);
+    // 页面是home时，展示三级联动
+    if (this.$route.path == "/home") {
+      this.show = true;
+    }
   },
   computed: {
     ...mapState("home", ["categoryList"]),
   },
   methods: {
+    enterShow() {
+      // 当时search模块时，鼠标移上三级联动部分，让内容显示
+      if (this.$route.path === "/search") {
+        this.show = true;
+      }
+    },
+    navUnHover() {
+      this.currentIndex = -1;
+      // 当页面是search时，鼠标离开时，让三级联动部分消失
+      if (this.$route.path === "/search") {
+        this.show = false;
+      }
+    },
     navHover: throttle(function (index) {
       // console.log(index);
       this.currentIndex = index;
     }, 50),
-
-    navUnHover() {
-      this.currentIndex = -1;
-    },
 
     routerChange(event) {
       console.log("works");
@@ -128,6 +141,7 @@ export default {
   data() {
     return {
       currentIndex: -1,
+      show: false,
     };
   },
 };
@@ -173,6 +187,11 @@ export default {
       position: absolute;
       background: #fafafa;
       z-index: 999;
+
+      a:hover {
+        color: rgba(255, 0, 0, 0.582);
+        cursor: pointer;
+      }
 
       .all-sort-list2 {
         .cur {
@@ -253,6 +272,18 @@ export default {
           // }
         }
       }
+    }
+    // 过度动画的开始
+    .sort-enter {
+      height: 0px;
+    }
+    // 过度动画的结束
+    .sort-enter-to {
+      height: 461px;
+    }
+    // 定义动画时间跟速率
+    .sort-enter-active {
+      transition: all 0.1s linear;
     }
   }
 }
