@@ -13,10 +13,13 @@
               :key="c1.categoryId"
               @mouseenter="navHover(index)"
               :class="{ cur: currentIndex == index }"
-              :data-category="c1.categoryId"
             >
               <h3>
-                <a href="">{{ c1.categoryName }}</a>
+                <a
+                  :data-categoryName="c1.categoryName"
+                  :data-categoryId1="c1.categoryId"
+                  >{{ c1.categoryName }}</a
+                >
               </h3>
               <!-- 二级与三级分类 -->
               <div
@@ -27,19 +30,25 @@
                   class="subitem"
                   v-for="(c2, index) in c1.categoryChild"
                   :key="c2.categoryId"
-                  :data-category="c2.categoryId"
                 >
                   <dl class="fore">
                     <dt>
-                      <a href="">{{ c2.categoryName }}</a>
+                      <a
+                        :data-categoryName="c2.categoryName"
+                        :data-categoryId2="c2.categoryId"
+                        >{{ c2.categoryName }}</a
+                      >
                     </dt>
                     <dd>
                       <em
                         v-for="(c3, index) in c2.categoryChild"
                         :key="c3.categoryId"
-                        :data-category="c3.categoryId"
                       >
-                        <a href="">{{ c3.categoryName }}</a>
+                        <a
+                          :data-categoryName="c3.categoryName"
+                          :data-categoryId3="c3.categoryId"
+                          >{{ c3.categoryName }}</a
+                        >
                       </em>
                     </dd>
                   </dl>
@@ -79,7 +88,7 @@ export default {
   },
   methods: {
     navHover: throttle(function (index) {
-      console.log(index);
+      // console.log(index);
       this.currentIndex = index;
     }, 50),
 
@@ -88,8 +97,32 @@ export default {
     },
 
     routerChange(event) {
-      console.log(`@@@`, event);
-      // this.$router.push();
+      console.log("works");
+      let { categoryname, categoryid1, categoryid2, categoryid3 } =
+        event.target.dataset;
+
+      if (categoryname) {
+        // 整理路由跳转的参数
+        let location = { name: "search" };
+        let query = { categoryName: categoryname };
+
+        if (categoryid1) {
+          query.categoryId1 = categoryid1;
+          console.log("点击了一级分类");
+        } else if (categoryid2) {
+          query.categoryId2 = categoryid2;
+          console.log("点击了二级分类");
+        } else if (categoryid3) {
+          query.categoryId3 = categoryid3;
+          console.log("点击了三级分类");
+        }
+
+        // 继续整理参数
+        location.query = query;
+
+        // 路由跳转
+        this.$router.push(location);
+      }
     },
   },
   data() {
