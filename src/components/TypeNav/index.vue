@@ -92,7 +92,6 @@ export default {
   },
   methods: {
     enterShow() {
-      console.log(this.$route.path);
       // 当时search模块时，鼠标移上三级联动部分，让内容显示
       if (this.$route.path !== "/home") {
         this.show = true;
