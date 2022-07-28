@@ -57,14 +57,20 @@ export default {
   name: "Header",
   methods: {
     headerSearch() {
-      // 对象传参
-      this.$router.push({
-        name: "search",
-        params: { keyword: this.keyword, id: 1 },
-        query: {
-          k: this.keyword.toUpperCase(),
-        },
-      });
+      console.log(`keyword`, this.keyword);
+
+      if (this.$route.query) {
+        let location = {
+          name: "search",
+          params: { keyword: this.keyword || undefined },
+        };
+        // 把当前路由的query传给location
+        location.query = this.$route.query;
+        console.log(location);
+        // 跳转路由，这里的情况是为了适应：先点击三级联动跳转到search页面，然后再点击搜索框的情况
+        this.$router.push(location);
+        alert("进入判断逻辑了");
+      }
     },
   },
   data() {

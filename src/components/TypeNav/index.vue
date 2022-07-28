@@ -83,8 +83,8 @@ export default {
   name: "TypeNav",
   mounted() {
     // 页面是home时，展示三级联动
-    if (this.$route.path == "/home") {
-      this.show = true;
+    if (this.$route.path !== "/home") {
+      this.show = false;
     }
   },
   computed: {
@@ -92,20 +92,25 @@ export default {
   },
   methods: {
     enterShow() {
+      console.log(this.$route.path);
       // 当时search模块时，鼠标移上三级联动部分，让内容显示
-      if (this.$route.path === "/search") {
+      if (this.$route.path !== "/home") {
         this.show = true;
       }
+      // 也可以用下面这种麻烦些的方式
+      // if (this.$route.path.indexOf("/search") !== -1) {
+      //   this.show = true;
+      // }
+      // alert("进入了三级联动分类");
     },
     navUnHover() {
       this.currentIndex = -1;
       // 当页面是search时，鼠标离开时，让三级联动部分消失
-      if (this.$route.path === "/search") {
+      if (this.$route.path !== "/home") {
         this.show = false;
       }
     },
     navHover: throttle(function (index) {
-      // console.log(index);
       this.currentIndex = index;
     }, 50),
 
@@ -121,18 +126,18 @@ export default {
 
         if (categoryid1) {
           query.categoryId1 = categoryid1;
-          console.log("点击了一级分类");
         } else if (categoryid2) {
           query.categoryId2 = categoryid2;
-          console.log("点击了二级分类");
         } else if (categoryid3) {
           query.categoryId3 = categoryid3;
-          console.log("点击了三级分类");
         }
 
         // 继续整理参数
         location.query = query;
 
+        if (this.$route.params) {
+          location.params = this.$route.params;
+        }
         // 路由跳转
         this.$router.push(location);
       }
@@ -141,7 +146,7 @@ export default {
   data() {
     return {
       currentIndex: -1,
-      show: false,
+      show: true,
     };
   },
 };
