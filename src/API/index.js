@@ -13,3 +13,7 @@ export const reqBannerList = () => {
   // 因为axios发送请求后，返回的是Promise对象，所以需要将其返回
   return mockRequest({ url: "/banner", methods: "get" });
 };
+
+export const reqFloorList = () => {
+  return mockRequest({ url: "/floor", methods: "get" });
+};

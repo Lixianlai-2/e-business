@@ -1,4 +1,4 @@
-import { reqCategoryList, reqBannerList } from "@/API";
+import { reqCategoryList, reqBannerList, reqFloorList } from "@/API";
 
 const home = {
   namespaced: true,
@@ -6,6 +6,7 @@ const home = {
     // 根据接口返回初始化
     categoryList: [],
     bannerList: [],
+    floorList: [],
   },
   mutations: {
     CATEGORYLIST(state, serverCategoryList) {
@@ -13,6 +14,10 @@ const home = {
     },
     GETBANNERLIST(state, mockBannerList) {
       state.bannerList = mockBannerList;
+    },
+    GETFLOORLIST(state, mockFloorList) {
+      state.floorList = mockFloorList;
+      console.log(`!!!`, state.floorList);
     },
   },
   actions: {
@@ -27,6 +32,14 @@ const home = {
     async getBannerList(context) {
       let result = await reqBannerList();
       context.commit("GETBANNERLIST", result.data);
+    },
+
+    async getFloorList(context) {
+      let result = await reqFloorList();
+      console.log(`result@@@`, result);
+      if (result.code === 200) {
+        context.commit("GETFLOORLIST", result.data);
+      }
     },
   },
   getters: {},

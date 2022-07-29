@@ -93,7 +93,13 @@
 </template>
 
 <script>
-export default {};
+export default {
+  name: "Floor",
+  props: ["list"],
+  mounted() {
+    console.log(`list!!!`, this.list);
+  },
+};
 </script>
 
 <style lang="less" scoped>

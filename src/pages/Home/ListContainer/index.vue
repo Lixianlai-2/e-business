@@ -3,7 +3,7 @@
     <div class="sortList clearfix">
       <div class="center">
         <!--banner轮播-->
-        <div class="swiper-container" id="mySwiper">
+        <div class="swiper-container" ref="swiper">
           <div class="swiper-wrapper">
             <div
               class="swiper-slide"
@@ -104,38 +104,37 @@ console.log(`Swiper@@@`, Swiper);
 export default {
   name: "ListContainer",
   mounted() {
-    console.log("挂载完毕,发送异步请求了");
     // 发送了这个请求
     this.$store.dispatch("home/getBannerList");
-    setTimeout(() => {
-      var mySwiper = new Swiper(".swiper-container", {
-        // direction: "vertical", // 垂直切换选项
-        loop: true, // 循环模式选项
-
-        // 如果需要分页器
-        pagination: {
-          el: ".swiper-pagination",
-          // 点击小球生效
-          clickable: true,
-        },
-
-        // 如果需要前进后退按钮
-        navigation: {
-          nextEl: ".swiper-button-next",
-          prevEl: ".swiper-button-prev",
-        },
-      });
-    }, 2000);
   },
-  // updated() {
+  watch: {
+    bannerList: {
+      handler() {
+        this.$nextTick(() => {
+          new Swiper(this.$refs.swiper, {
+            // direction: "vertical", // 垂直切换选项
+            loop: true, // 循环模式选项
 
-  // },
+            // 如果需要分页器
+            pagination: {
+              el: ".swiper-pagination",
+              // 点击小球生效
+              clickable: true,
+            },
+
+            // 如果需要前进后退按钮
+            navigation: {
+              nextEl: ".swiper-button-next",
+              prevEl: ".swiper-button-prev",
+            },
+          });
+        });
+      },
+    },
+  },
   computed: {
     // 拿到数据
     ...mapState("home", ["bannerList"]),
-  },
-  beforeDestroy() {
-    console.log("即将销毁了");
   },
 };
 </script>
