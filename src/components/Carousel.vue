@@ -1,11 +1,7 @@
 <template>
   <div class="swiper-container" id="floor1Swiper" ref="cur">
     <div class="swiper-wrapper">
-      <div
-        class="swiper-slide"
-        v-for="carousel in list.carouselList"
-        :key="carousel.id"
-      >
+      <div class="swiper-slide" v-for="carousel in list" :key="carousel.id">
         <img :src="carousel.imgUrl" />
       </div>
     </div>
@@ -51,6 +47,9 @@ export default {
         });
       },
     },
+  },
+  mounted() {
+    console.log(`Carousel组件的list`, this.list);
   },
 };
 </script>
